@@ -11,5 +11,6 @@ class Routes {
   static const String aboutUsScreen = '/aboutUsScreen';
   static const String userAccountScreen = '/userAccountScreen';
   static const String categoryScreen = '/categoryScreen';
+  static const String categoryProductsList = '/categoryProductsList';
   static const String newOrderScreen = '/newOrderScreen';
 }

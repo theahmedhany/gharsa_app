@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:gharsa_app/core/theming/app_colors.dart';
-import 'package:gharsa_app/core/theming/app_fonts.dart';
+import '../../../../core/theming/app_colors.dart';
+import '../../../../core/theming/app_fonts.dart';
 
 class CustomProfileScreenItem extends StatelessWidget {
   const CustomProfileScreenItem({

@@ -1,6 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gharsa_app/features/order/presentation/screens/new_order_screen.dart';
+import '../helpers/constants.dart';
+import '../../features/best_seller/data/repos/best_seller_products_repo.dart';
+import '../../features/best_seller/manager/best_seller_products_cubit.dart';
+import '../../features/category/data/repos/all_categories_repo.dart';
+import '../../features/category/data/repos/category_products_repo.dart';
+import '../../features/category/manager/all_categories/all_categories_cubit.dart';
+import '../../features/category/manager/category_products/category_products_cubit.dart';
+import '../../features/category/presentation/screens/category_products_list.dart';
+import '../../features/details/data/repos/product_details_repo.dart';
+import '../../features/details/manager/product_details_cubit.dart';
+import '../../features/order/data/repos/new_order_repo.dart';
+import '../../features/order/manager/new_order_cubit.dart';
+import '../../features/order/presentation/screens/new_order_screen.dart';
+import '../../features/search/data/repos/search_products_repo.dart';
+import '../../features/search/manager/search_products_cubit.dart';
 import '../../features/best_seller/presentation/screens/best_seller_screen.dart';
 import '../../features/category/presentation/screens/category_screen.dart';
 import '../../features/details/presentation/screens/details_screen.dart';
@@ -50,11 +64,41 @@ class AppRouter {
 
       // Home Screen
       case Routes.homeScreen:
-        return MaterialPageRoute(builder: (_) => const HomeScreen());
+        return MaterialPageRoute(
+          builder:
+              (_) => MultiBlocProvider(
+                providers: [
+                  BlocProvider(
+                    create:
+                        (context) => BestSellerProductsCubit(
+                          getIt<BestSellerProductsRepo>(),
+                        )..emitGetAllProducts(),
+                  ),
+                  BlocProvider(
+                    create:
+                        (context) =>
+                            SearchProductsCubit(getIt<SearchProductsRepo>())
+                              ..getProductsBySearch(
+                                searchedProduct: filterProductsBySearch,
+                              ),
+                  ),
+                ],
+                child: const HomeScreen(),
+              ),
+        );
 
       // Best Seller Screen
       case Routes.bestSellerScreen:
-        return MaterialPageRoute(builder: (_) => const BestSellerScreen());
+        return MaterialPageRoute(
+          builder:
+              (_) => BlocProvider(
+                create:
+                    (context) =>
+                        BestSellerProductsCubit(getIt<BestSellerProductsRepo>())
+                          ..emitGetAllProducts(),
+                child: const BestSellerScreen(),
+              ),
+        );
 
       // Notifications Screen
       case Routes.notificationsScreen:
@@ -62,7 +106,17 @@ class AppRouter {
 
       // Details Screen
       case Routes.detailsScreen:
-        return MaterialPageRoute(builder: (_) => const DetailsScreen());
+        final args = settings.arguments as Map<String, dynamic>?;
+        return MaterialPageRoute(
+          builder:
+              (_) => BlocProvider(
+                create:
+                    (context) =>
+                        ProductDetailsCubit(getIt<ProductDetailsRepo>())
+                          ..emitGetProductDetails(args?['productId']),
+                child: const DetailsScreen(),
+              ),
+        );
 
       // About Us Screen
       case Routes.aboutUsScreen:
@@ -74,18 +128,49 @@ class AppRouter {
 
       // Category Screen
       case Routes.categoryScreen:
-        return MaterialPageRoute(builder: (_) => CategoryScreen());
+        return MaterialPageRoute(
+          builder:
+              (_) => BlocProvider(
+                create:
+                    (context) =>
+                        AllCategoriesCubit(getIt<AllCategoriesRepo>())
+                          ..emitGetAllCategories(),
+                child: CategoryScreen(),
+              ),
+        );
+
+      // Category Products Screen
+      case Routes.categoryProductsList:
+        final args = settings.arguments as Map<String, dynamic>?;
+        return MaterialPageRoute(
+          builder:
+              (_) => BlocProvider(
+                create:
+                    (context) =>
+                        CategoryProductsCubit(getIt<CategoryProductsRepo>()),
+                child: CategoryProductsList(
+                  categoryId: args?['categoryId'] ?? 0,
+                  categoryName: args?['categoryName'] ?? '',
+                ),
+              ),
+        );
 
       // New Order Screen
       case Routes.newOrderScreen:
         final args = settings.arguments as Map<String, dynamic>?;
         return MaterialPageRoute(
           builder:
-              (_) => NewOrderScreen(
-                productName: args?['productName'],
-                productImage: args?['productImage'],
-                productPrice: args?['productPrice'],
-                productId: args?['productId'],
+              (_) => BlocProvider(
+                create:
+                    (context) =>
+                        NewOrderCubit(getIt<NewOrderRepo>())
+                          ..emitNewOrder(args?['productId']),
+                child: NewOrderScreen(
+                  productName: args?['productName'],
+                  productImage: args?['productImage'],
+                  productPrice: args?['productPrice'],
+                  productId: args?['productId'],
+                ),
               ),
         );
 

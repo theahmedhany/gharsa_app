@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gharsa_app/core/helpers/spacing.dart';
-import 'package:gharsa_app/features/profile/presentation/widgets/user_data_field.dart';
+import '../../../../core/helpers/spacing.dart';
+import 'user_data_field.dart';
 
 class UserAccountTextFields extends StatelessWidget {
   final String name;

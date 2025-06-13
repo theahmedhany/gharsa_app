@@ -98,6 +98,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       hintText: 'رقم التليفون',
                       controller:
                           context.read<SignupCubit>().mobileNameController,
+                      keyboardType: TextInputType.phone,
                       validator: (value) {
                         final trimmedValue = value?.trim() ?? '';
                         if (trimmedValue.isEmpty ||

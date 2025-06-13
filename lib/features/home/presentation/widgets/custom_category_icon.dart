@@ -25,13 +25,17 @@ class CustomCategoryIcon extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SvgPicture.asset(
-            icon,
-            colorFilter: const ColorFilter.mode(
-              AppColors.kMainGreyColor,
-              BlendMode.srcIn,
-            ),
+          SizedBox(
             width: 50.w,
+            height: 50.h,
+            child: SvgPicture.asset(
+              icon,
+              colorFilter: const ColorFilter.mode(
+                AppColors.kMainGreyColor,
+                BlendMode.srcIn,
+              ),
+              width: 50.w,
+            ),
           ),
           verticalSpace(10),
           Text(title, style: AppFonts.font16GreyBold),

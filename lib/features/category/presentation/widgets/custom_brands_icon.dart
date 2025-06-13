@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:gharsa_app/core/theming/app_colors.dart';
+import '../../../../core/theming/app_colors.dart';
 
 class CustomBrandsIcon extends StatelessWidget {
   const CustomBrandsIcon({super.key, required this.imageSrc});

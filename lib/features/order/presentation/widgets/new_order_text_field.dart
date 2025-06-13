@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gharsa_app/core/theming/app_colors.dart';
+import '../../../../core/theming/app_colors.dart';
 
 class NewOrderTextField extends StatelessWidget {
   const NewOrderTextField({
@@ -11,6 +11,7 @@ class NewOrderTextField extends StatelessWidget {
     this.suffixIcon,
     this.controller,
     required this.validator,
+    this.keyboardType,
   });
 
   final String hintText;
@@ -19,6 +20,7 @@ class NewOrderTextField extends StatelessWidget {
   final Widget? suffixIcon;
   final TextEditingController? controller;
   final Function(String?) validator;
+  final TextInputType? keyboardType;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +28,7 @@ class NewOrderTextField extends StatelessWidget {
       textDirection: TextDirection.rtl,
       child: TextFormField(
         controller: controller,
+        keyboardType: keyboardType,
         enabled: enabled ?? true,
         decoration: InputDecoration(
           isDense: true,

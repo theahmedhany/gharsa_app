@@ -7,11 +7,11 @@ class CustomProgressIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    return Center(
       child: CircularProgressIndicator(
         color: AppColors.kMainPrimaryColor,
         strokeWidth: 2,
-        backgroundColor: AppColors.kMainGreyColor,
+        backgroundColor: AppColors.kMainGreyColor.withValues(alpha: 0.3),
       ),
     );
   }

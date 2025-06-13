@@ -1,18 +1,27 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../core/widgets/custom_favorite_button.dart';
+import '../../../../core/widgets/custom_progress_indicator.dart';
+import '../../../best_seller/data/models/best_seller_products_model.dart';
 import '../../../../core/helpers/extensions.dart';
 import '../../../../core/routing/routes.dart';
 import '../../../../core/theming/app_colors.dart';
 import '../../../../core/theming/app_fonts.dart';
 
 class CustomProductsCard extends StatelessWidget {
-  const CustomProductsCard({super.key});
+  final ProductData product;
+
+  const CustomProductsCard({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        context.pushNamed(Routes.detailsScreen);
+        context.pushNamed(
+          Routes.detailsScreen,
+          arguments: {'productId': product.productId},
+        );
       },
       child: Container(
         decoration: BoxDecoration(
@@ -31,16 +40,32 @@ class CustomProductsCard extends StatelessWidget {
               flex: 3,
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12.r),
+                  color: AppColors.kMainSecondaryColor.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(10.r),
+                  border: Border.all(
+                    width: 0.5,
+                    color: AppColors.kMainSecondaryColor,
+                  ),
                 ),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12.r),
-                  child: Image.asset(
-                    'assets/images/image_2.png',
-                    fit: BoxFit.fill,
+                  borderRadius: BorderRadius.circular(10.r),
+                  child: CachedNetworkImage(
+                    imageUrl: product.pictureUrl ?? '',
                     width: double.infinity,
-                    height: 120.h,
+                    height: 120.r,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) {
+                      return const Center(child: CustomProgressIndicator());
+                    },
+                    errorWidget: (context, url, error) {
+                      return Center(
+                        child: Image.asset(
+                          'assets/master/splah_screen.png',
+                          width: 100.w,
+                          fit: BoxFit.contain,
+                        ),
+                      );
+                    },
                   ),
                 ),
               ),
@@ -51,7 +76,7 @@ class CustomProductsCard extends StatelessWidget {
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: const Color(0x334B8E4B),
-                  borderRadius: BorderRadius.circular(12.r),
+                  borderRadius: BorderRadius.circular(10.r),
                 ),
                 child: Padding(
                   padding: EdgeInsets.all(16.r),
@@ -63,14 +88,16 @@ class CustomProductsCard extends StatelessWidget {
                         height: 35.r,
                         decoration: BoxDecoration(
                           color: AppColors.kMainPrimaryColor.withValues(
-                            alpha: 0.8,
+                            alpha: 0.4,
                           ),
                           shape: BoxShape.circle,
                         ),
-                        child: Icon(
-                          Icons.favorite_border_rounded,
-                          color: Colors.white,
-                          size: 20.r,
+                        child: CustomFavoriteButton(
+                          itemId: product.productId ?? 0,
+                          name: product.name ?? '',
+                          price: product.price ?? 0.0,
+                          imageUrl: product.pictureUrl ?? '',
+                          category: product.categoryName ?? '',
                         ),
                       ),
                       const Spacer(),
@@ -78,7 +105,12 @@ class CustomProductsCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('تفاح بلدي', style: AppFonts.font16DarkBold),
+                          Text(
+                            (product.name != null && product.name!.length > 10)
+                                ? '${product.name?.substring(0, 10)}...'
+                                : product.name ?? '',
+                            style: AppFonts.font16DarkBold,
+                          ),
                           Text.rich(
                             TextSpan(
                               children: [
@@ -87,7 +119,14 @@ class CustomProductsCard extends StatelessWidget {
                                   style: AppFonts.font14GreenMedium,
                                 ),
                                 TextSpan(
-                                  text: ' 44 جنيهاً',
+                                  text:
+                                      (() {
+                                        final priceText =
+                                            '${product.price?.toStringAsFixed(2) ?? '0'} ج';
+                                        return priceText.length > 8
+                                            ? '${priceText.substring(0, 8)}...'
+                                            : priceText;
+                                      })(),
                                   style: AppFonts.font14DarkRegular,
                                 ),
                               ],

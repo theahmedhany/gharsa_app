@@ -2,13 +2,12 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'home_products_grid.dart';
 import 'package:intl/intl.dart';
-
 import '../../../../core/helpers/extensions.dart';
 import '../../../../core/helpers/spacing.dart';
 import '../../../../core/routing/routes.dart';
 import 'custom_home_app_bar.dart';
-import 'custom_products_card.dart';
 import 'home_main_panner.dart';
 import 'main_categories.dart';
 import 'main_category_row.dart';
@@ -82,22 +81,7 @@ class HomeScreenContent extends StatelessWidget {
                         },
                       ),
                       verticalSpace(20),
-                      GridView.builder(
-                        padding: EdgeInsets.only(bottom: 26.r),
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              mainAxisSpacing: 12,
-                              crossAxisSpacing: 12,
-                              childAspectRatio: 0.8,
-                            ),
-                        itemCount: 2,
-                        itemBuilder: (_, index) {
-                          return const CustomProductsCard();
-                        },
-                      ),
+                      const HomeProductsGrid(),
                     ],
                   ),
                 ),

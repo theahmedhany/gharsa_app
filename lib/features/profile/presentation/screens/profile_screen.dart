@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gharsa_app/features/profile/presentation/widgets/custom_profile_screen_item.dart';
+import '../widgets/custom_profile_screen_item.dart';
 import '../../../../core/helpers/extensions.dart';
 import '../../../../core/helpers/shared_pref_helper.dart';
 import '../../../../core/helpers/spacing.dart';

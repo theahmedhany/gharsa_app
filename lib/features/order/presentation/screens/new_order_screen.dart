@@ -1,7 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gharsa_app/features/order/presentation/widgets/new_order_text_field.dart';
+import '../../../../core/helpers/app_regex.dart';
+import '../../manager/new_order_cubit.dart';
+import '../widgets/new_order_bloc_listener.dart';
+import '../widgets/new_order_text_field.dart';
 import '../../../../core/helpers/spacing.dart';
 import '../../../../core/theming/app_colors.dart';
 import '../../../../core/theming/app_fonts.dart';
@@ -18,8 +22,9 @@ class NewOrderScreen extends StatelessWidget {
     required this.productId,
   });
 
-  final String productName, productImage, productId;
+  final String productName, productImage;
   final double productPrice;
+  final int productId;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +38,7 @@ class NewOrderScreen extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 20.r),
         child: SingleChildScrollView(
           child: Form(
+            key: context.read<NewOrderCubit>().formKey,
             child: Directionality(
               textDirection: TextDirection.rtl,
               child: Column(
@@ -58,7 +64,7 @@ class NewOrderScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(15),
                           child: CachedNetworkImage(
                             imageUrl: productImage,
-                            width: 100.r,
+                            width: 150.r,
                             height: 100.r,
                             fit: BoxFit.cover,
                             placeholder: (context, url) {
@@ -91,7 +97,7 @@ class NewOrderScreen extends StatelessWidget {
                             ),
                             verticalSpace(10),
                             Text(
-                              '\$${productPrice.toString()}',
+                              '${productPrice.toString()} جنيه.',
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: AppFonts.font16GreyRegular,
@@ -111,38 +117,75 @@ class NewOrderScreen extends StatelessWidget {
                   verticalSpace(8),
                   NewOrderTextField(
                     hintText: 'من فضلك أدخل اسمك بالكامل.',
-                    validator: (value) {},
+                    controller:
+                        context.read<NewOrderCubit>().clientNameController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'من فضلك أدخل اسمك بالكامل.';
+                      }
+                      return null;
+                    },
                   ),
                   verticalSpace(16),
                   Text('رقم تليفون المشتري.', style: AppFonts.font16GreyBold),
                   verticalSpace(8),
                   NewOrderTextField(
                     hintText: 'من فضلك أدخل رقم تليفونك.',
-                    validator: (value) {},
+                    controller:
+                        context.read<NewOrderCubit>().clientPhoneController,
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      final trimmedValue = value?.trim() ?? '';
+                      if (trimmedValue.isEmpty ||
+                          !AppRegex.isPhoneNumberValid(trimmedValue)) {
+                        return 'من فضلك أدخل رقم التليفون.';
+                      }
+                      return null;
+                    },
                   ),
                   verticalSpace(16),
                   Text('عنوان المشتري.', style: AppFonts.font16GreyBold),
                   verticalSpace(8),
                   NewOrderTextField(
                     hintText: 'من فضلك أدخل عنوانك بالكامل.',
-                    validator: (value) {},
+                    controller: context.read<NewOrderCubit>().addressController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'من فضلك أدخل عنوانك بالكامل.';
+                      }
+                      return null;
+                    },
                   ),
                   verticalSpace(16),
                   Text('الكمية', style: AppFonts.font16GreyBold),
                   verticalSpace(8),
                   NewOrderTextField(
                     hintText: 'من فضلك أدخل الكمية المطلوبة.',
-                    validator: (value) {},
+                    controller:
+                        context.read<NewOrderCubit>().quantityController,
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (value == null || value.isEmpty || value == '0') {
+                        return 'من فضلك أدخل الكمية المطلوبة.';
+                      }
+                      return null;
+                    },
                   ),
                   verticalSpace(40),
                   AppButton(
-                    press: () {},
+                    press: () {
+                      final formKey = context.read<NewOrderCubit>().formKey;
+                      if (formKey.currentState?.validate() ?? false) {
+                        context.read<NewOrderCubit>().emitNewOrder(productId);
+                      }
+                    },
                     buttonTitle: 'تأكيد الطلب',
                     buttonColor: AppColors.kMainPrimaryColor,
                     boarderColor: AppColors.kMainPrimaryColor,
                     textColor: Colors.white,
                   ),
                   verticalSpace(30),
+                  const NewOrderBlocListener(),
                 ],
               ),
             ),
