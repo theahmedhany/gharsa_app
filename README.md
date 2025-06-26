@@ -107,6 +107,8 @@ Gharsa is designed for health-conscious individuals, home chefs, and grocery sho
 
 #### To see **Gharsa** in action, check out the video below:
 
+https://github.com/user-attachments/assets/41b0f1b5-2199-4f2a-8a5b-b4c04e78a329
+
 ---
 
 <h3 align="center">
